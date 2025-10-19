@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>Asset</title>
+<style>
+  :root{--bg:#fff;--fg:#0b0b0c;--muted:#6b7280;--muted2:#9aa0a6;--line:#e5e7eb;--card:#ffffff;--soft:#f6f7f9;--green:#059669;--red:#ef4444;--shadow:0 8px 24px rgba(0,0,0,.06); color-scheme:light dark}
+  @media (prefers-color-scheme:dark){:root{--bg:#0b0b0c;--fg:#fafafa;--muted:#9ca3af;--muted2:#7c838d;--line:#23262b;--card:#0e0f11;--soft:#121317;--shadow:0 8px 24px rgba(0,0,0,.35)}}
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+
+  .page{max-width:720px;margin:0 auto;min-height:100vh}
+
+  /* 顶部条 */
+  .top{position:sticky;top:0;z-index:30;background:color-mix(in oklab, var(--bg) 92%, transparent);
+       backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .trow{display:flex;align-items:center;gap:10px;padding:12px 14px}
+  .coinlogo{width:32px;height:32px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:700}
+  .title{font-weight:800;font-size:16px}
+  .right{margin-left:auto;display:flex;gap:12px}
+  .iconbtn{background:none;border:0;color:var(--muted);padding:6px}
+
+  /* 页签 */
+  .tabs{display:flex;gap:22px;padding:0 14px;border-bottom:1px solid var(--line)}
+  .tab{padding:12px 0;color:var(--muted);font-weight:700}
+  .tab.active{color:var(--fg);border-bottom:2px solid var(--fg)}
+
+  /* 主体块 */
+  .section{padding:12px 14px}
+  .pricebar{display:flex;align-items:flex-end;gap:12px}
+  .price{font-size:30px;font-weight:900}
+  .chip{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:4px 8px;font-weight:700}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .muted{color:var(--muted)}
+  .row{display:flex;align-items:center;gap:10px}
+
+  .seg{display:flex;gap:6px;margin:10px 0}
+  .seg button{height:32px;padding:0 10px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px}
+  .seg .on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+
+  .chart{height:300px;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:8px;overflow:hidden}
+  .chart .bar{display:flex;gap:8px;margin-bottom:8px}
+  .chart .bar .switch{margin-left:auto;display:flex;gap:6px}
+
+  /* 指标条 */
+  .indis{display:flex;gap:10px;overflow:auto;margin:10px 0;padding-bottom:4px}
+  .pill{border:1px solid var(--line);background:var(--card);padding:7px 12px;border-radius:12px;white-space:nowrap}
+  .pill.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+
+  /* 表现条 */
+  .perf{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .perf .item{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-width:92px}
+  .perf .v{font-weight:800}
+  .green{color:var(--green)} .red{color:var(--red)}
+
+  /* 情绪条 */
+  .sent{margin-top:6px}
+  .barwrap{background:var(--soft);border:1px solid var(--line);border-radius:10px;height:10px;overflow:hidden}
+  .bull{background:var(--green);height:100%}
+  .rowc{display:flex;justify-content:space-between;margin-top:6px}
+
+  /* 分隔标题 */
+  .h2{font-weight:900;margin:18px 0 10px 0}
+
+  /* 表格/盘口 */
+  .order{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  .order th,.order td{padding:6px;border-bottom:1px dashed var(--line);text-align:right}
+  .order th:first-child,.order td:first-child{text-align:left}
+  .buy{color:var(--green)} .sell{color:var(--red)}
+  .depthbar{height:8px;border-radius:4px;background:linear-gradient(90deg, rgba(5,150,105,.15), rgba(239,68,68,.15));margin:6px 0}
+
+  /* 资金流 */
+  .gauge{width:240px;height:120px}
+  .glabel{font-weight:800;text-anchor:middle}
+  .fftabs{display:flex;gap:8px;margin:8px 0}
+  .fftabs button{height:32px;padding:0 10px;border:1px solid var(--line);background:var(--card);border-radius:10px}
+  .fftabs .on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+  .bars{height:160px;border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;align-items:flex-end;gap:6px;overflow-x:auto}
+  .barpos{width:16px;background:var(--green)} .barneg{width:16px;background:var(--red)}
+
+  /* 底部操作 */
+  .footer{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--bg)}
+  .btn{border:1px solid var(--line);background:var(--soft);color:var(--fg);padding:10px;border-radius:14px;text-align:center}
+</style>
+</head>
+<body>
+<div class="page" id="app">
+
+  <!-- 顶部 -->
+  <div class="top">
+    <div class="trow">
+      <button class="iconbtn" onclick="history.back()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+      <div class="coinlogo" id="logo">?</div>
+      <div>
+        <div class="title" id="title">ASSET</div>
+        <div class="muted" id="subtitle">/SYMBOL</div>
+      </div>
+      <div class="right">
+        <button class="iconbtn" id="shareBtn" title="Share">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 16V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="tabs" id="topTabs">
+      <div class="tab active" data-tab="market">Market</div>
+      <div class="tab" data-tab="apy">APY</div>
+      <div class="tab" data-tab="liq">Liquidation</div>
+      <div class="tab" data-tab="liqmap">Liquidation Map</div>
+      <div class="tab" data-tab="longs">Longs/Shorts</div>
+    </div>
+  </div>
+
+  <!-- Market 页 -->
+  <div class="section" data-page="market">
+    <div class="pricebar">
+      <div class="price" id="price">$0.00</div>
+      <div class="chip" id="pct">+0.00%</div>
+    </div>
+    <div class="grid2">
+      <div class="muted">Market Cap <b id="mcap">$0</b></div>
+      <div class="muted right">24H Volume <b id="vol">$0</b></div>
+      <div class="muted">24H High <b id="high">$0</b></div>
+      <div class="muted right">24H Amount <b id="amt">0</b></div>
+      <div class="muted">24H Low <b id="low">$0</b></div>
+    </div>
+
+    <div class="chart">
+      <div class="bar">
+        <div class="seg" id="tf">
+          <button data-k="15m">15m</button>
+          <button class="on" data-k="1h">1h</button>
+          <button data-k="4h">4h</button>
+          <button data-k="1d">1D</button>
+          <button data-k="1w">1W</button>
+          <button data-k="1m">1M</button>
+        </div>
+        <div class="switch">
+          <button id="modeLine" class="on">Line</button>
+          <button id="modeCandle">Candle</button>
+          <button id="modeDepth">Depth</button>
+        </div>
+      </div>
+      <svg id="mainChart" width="100%" height="240" viewBox="0 0 1000 240" preserveAspectRatio="none"></svg>
+    </div>
+
+    <!-- 指标 -->
+    <div class="indis" id="indis">
+      <div class="pill on">MA</div><div class="pill">EMA</div><div class="pill">BOLL</div>
+      <div class="pill">SAR</div><div class="pill">VOL</div><div class="pill">MACD</div>
+      <div class="pill">RSI</div><div class="pill">KDJ</div><div class="pill">OBV</div>
+    </div>
+
+    <!-- 各周期表现 -->
+    <div class="perf" id="perf">
+      <!-- 动态填充 -->
+    </div>
+
+    <!-- 情绪 -->
+    <div class="sent">
+      <div class="rowc">
+        <div>👍 Bullish <b id="bull">0%</b></div>
+        <div>👎 Bearish <b id="bear">0%</b></div>
+      </div>
+      <div class="barwrap"><div id="bullbar" class="bull" style="width:50%"></div></div>
+    </div>
+
+    <div class="h2">Trade</div>
+    <div class="seg" id="tradeTabs">
+      <button class="on" data-t="orderbook">OrderBook</button>
+      <button data-t="trades">Last Trade</button>
+    </div>
+
+    <div id="orderbookView">
+      <div class="depthbar" id="depthShare"></div>
+      <table class="order" id="orderbookTable">
+        <thead><tr><th>Buy</th><th>Price</th><th>Sell</th><th>Qty</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="tradesView" style="display:none">
+      <table class="order" id="tradesTable">
+        <thead><tr><th>Time</th><th>Side</th><th>Price</th><th>Qty</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="h2">Fund Flow</div>
+    <div class="fftabs" id="ffTabs">
+      <button class="on" data-r="15m">15m</button>
+      <button data-r="30m">30m</button>
+      <button data-r="1h">1h</button>
+      <button data-r="2h">2h</button>
+      <button data-r="4h">4h</button>
+      <button data-r="1d">1D</button>
+    </div>
+
+    <div class="row" style="gap:16px;align-items:center">
+      <svg class="gauge" id="gauge" viewBox="0 0 240 120"></svg>
+      <div>
+        <div class="muted">Unit: <b id="ffUnit">BTC</b></div>
+        <div class="muted">Net Inflow(24H): <b id="netIn">$0</b></div>
+      </div>
+    </div>
+
+    <div class="bars" id="bars"></div>
+  </div>
+
+  <!-- 其它顶级页签（空白占位） -->
+  <div class="section" data-page="apy" style="display:none"></div>
+  <div class="section" data-page="liq" style="display:none"></div>
+  <div class="section" data-page="liqmap" style="display:none"></div>
+  <div class="section" data-page="longs" style="display:none"></div>
+
+  <!-- 底部操作 -->
+  <div class="footer">
+    <div class="btn">🔔 Alert</div>
+    <div class="btn">⭐ Favorite</div>
+    <div class="btn">🖼️ Popup</div>
+  </div>
+</div>
+
+<script>
+/* =========================
+   接口配置（按你的后端修改）
+   =========================
+   约定路径（可自行替换）：
+   - GET  /asset/:id/summary
+        -> { id,symbol,name,price,change24h,marketCap,high24h,low24h,volume24h,amount24h }
+   - GET  /asset/:id/history?interval=1h
+        -> [ { t, open, high, low, close, vol } ... ]   // t: ms
+   - GET  /asset/:id/changes
+        -> { "1h":-0.03, "24h":1.69, "7d":-5.27, "30d":-5.61, "1y":59.55, "all":176.07 }
+   - GET  /asset/:id/sentiment
+        -> { bullish:0.61, bearish:0.38 }
+   - GET  /asset/:id/orderbook?depth=50
+        -> { bids: [ [price, qty], ... ], asks: [ [price, qty], ... ], share:{buy:0.1078, sell:0.8922} }
+   - GET  /asset/:id/trades?limit=50
+        -> [ { t, side:"buy"|"sell", price, qty } ... ]
+   - GET  /asset/:id/fundflow?range=1d
+        -> { unit:"BTC", netInflow:-3.58e6,
+             history:[ { t, value }, ... ],        // 24h曲线（正为净流入，负为净流出）
+             bars:[ { t, inflow, outflow }, ... ]  // 柱状堆叠（正/负）
+           }
+*/
+const API_BASE = "https://your.api.example/v1";   // <<< 填你的后端根路径
+const id = new URLSearchParams(location.search).get("id") || "btc";
+
+/* ========== 工具 ========= */
+const $=s=>document.querySelector(s);
+const fmtMoney=n=>n>=1e12?`$${(n/1e12).toFixed(2)}T`:n>=1e9?`$${(n/1e9).toFixed(2)}B`:n>=1e6?`$${(n/1e6).toFixed(2)}M`:n>=1e3?`$${(n/1e3).toFixed(2)}K`:`$${(+n).toFixed(2)}`;
+const fmtNum=n => (+n).toLocaleString(undefined,{maximumFractionDigits:2});
+const cls=(el,on)=>on?el.classList.add("on"):el.classList.remove("on");
+
+/* ========== 顶部页签 ========== */
+$("#topTabs").addEventListener("click",e=>{
+  const t=e.target.closest(".tab"); if(!t) return;
+  const key=t.dataset.tab;
+  [...$("#topTabs").children].forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  document.querySelectorAll("[data-page]").forEach(p=>{
+    p.style.display = p.dataset.page===key? "block":"none";
+  });
+});
+
+/* ========== 时间粒度 / 模式切换 ========== */
+let interval="1h";
+let mode="line"; // line|candle|depth
+
+$("#tf").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  interval=b.dataset.k; [...$("#tf").children].forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  loadHistory();
+});
+$("#modeLine").onclick=()=>{mode="line"; cls($("#modeLine"),true); cls($("#modeCandle"),false); cls($("#modeDepth"),false); loadHistory();}
+$("#modeCandle").onclick=()=>{mode="candle"; cls($("#modeLine"),false); cls($("#modeCandle"),true); cls($("#modeDepth"),false); loadHistory();}
+$("#modeDepth").onclick=()=>{mode="depth"; cls($("#modeLine"),false); cls($("#modeCandle"),false); cls($("#modeDepth"),true); loadDepth();}
+
+/* ========== Trade 子页签 ========== */
+$("#tradeTabs").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  [...$("#tradeTabs").children].forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  const t=b.dataset.t;
+  $("#orderbookView").style.display = (t==="orderbook")?"block":"none";
+  $("#tradesView").style.display = (t==="trades")?"block":"none";
+});
+
+/* ========== 画图（SVG） ========== */
+const svg = $("#mainChart");
+function drawLine(items){
+  svg.innerHTML=""; const w=1000,h=240, pad=10;
+  const xs=items.map(d=>d.t), ys=items.map(d=>d.close ?? d.p);
+  if(xs.length<2) return;
+  const xmin=Math.min(...xs), xmax=Math.max(...xs), ymin=Math.min(...ys), ymax=Math.max(...ys);
+  const nx=t=>pad + ((t-xmin)/(xmax-xmin||1))*(w-2*pad);
+  const ny=p=>h - (pad + ((p-ymin)/(ymax-ymin||1))*(h-2*pad));
+  // grid
+  for(let i=1;i<4;i++){ const gy = pad + i*(h-2*pad)/4;
+    const g=line( pad,gy, w-pad,gy, 1, .12); svg.appendChild(g);
+  }
+  // path
+  let d=`M ${nx(xs[0])} ${ny(ys[0])}`; for(let i=1;i<xs.length;i++) d += ` L ${nx(xs[i])} ${ny(ys[i])}`;
+  const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+  path.setAttribute("d",d); path.setAttribute("fill","none"); path.setAttribute("stroke","currentColor"); path.setAttribute("stroke-width","2.5");
+  svg.appendChild(path);
+}
+function drawCandle(items){
+  svg.innerHTML=""; const w=1000,h=240,pad=10;
+  const xs=items.map(d=>d.t), highs=items.map(d=>d.high), lows=items.map(d=>d.low);
+  if(xs.length<2) return;
+  const xmin=Math.min(...xs), xmax=Math.max(...xs), ymin=Math.min(...lows), ymax=Math.max(...highs);
+  const nx=t=>pad + ((t-xmin)/(xmax-xmin||1))*(w-2*pad);
+  const ny=p=>h - (pad + ((p-ymin)/(ymax-ymin||1))*(h-2*pad));
+  const bw=(w-2*pad)/items.length*0.7;
+  for(const k of items){
+    const x=nx(k.t), y1=ny(k.high), y2=ny(k.low), yo=ny(k.open), yc=ny(k.close);
+    const up = k.close>=k.open;
+    svg.appendChild(line(x,y1,x,y2,1, .5));
+    const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+    rect.setAttribute("x", x-bw/2); rect.setAttribute("y", Math.min(yo,yc));
+    rect.setAttribute("width", bw); rect.setAttribute("height", Math.max(2, Math.abs(yo-yc)));
+    rect.setAttribute("fill", up? "var(--green)":"var(--red)");
+    rect.setAttribute("opacity",".85");
+    svg.appendChild(rect);
+  }
+}
+function drawDepth(bids,asks){
+  svg.innerHTML=""; const w=1000,h=240,pad=10;
+  const pts = [...bids.map(([p,q])=>({p:+p,q:+q,side:'b'})), ...asks.map(([p,q])=>({p:+p,q:+q,side:'a'}))];
+  if(pts.length===0) return;
+  const prices = pts.map(x=>x.p), qtys = pts.map(x=>x.q);
+  const pmin=Math.min(...prices), pmax=Math.max(...prices), qmin=0, qmax=Math.max(...qtys);
+  const nx=p=>pad + ((p-pmin)/(pmax-pmin||1))*(w-2*pad);
+  const ny=q=>h - (pad + ((q-qmin)/(qmax-qmin||1))*(h-2*pad));
+  // cumulative
+  let cum=0; const bpath=[], apath=[];
+  bids.sort((a,b)=>b[0]-a[0]).forEach(([p,q],i)=>{ cum+=q; bpath.push([nx(p), ny(cum)]) }); // 从中间向左
+  cum=0; asks.sort((a,b)=>a[0]-b[0]).forEach(([p,q],i)=>{ cum+=q; apath.push([nx(p), ny(cum)]) });
+  const g1=poly(bpath,"var(--green)"); const g2=poly(apath,"var(--red)");
+  svg.appendChild(g1); svg.appendChild(g2);
+}
+function line(x1,y1,x2,y2,w=1,op=.2){ const l=document.createElementNS("http://www.w3.org/2000/svg","line"); l.setAttribute("x1",x1);l.setAttribute("y1",y1);l.setAttribute("x2",x2);l.setAttribute("y2",y2);l.setAttribute("stroke","currentColor");l.setAttribute("stroke-width",w);l.setAttribute("opacity",op); return l;}
+function poly(points,color){ const p=document.createElementNS("http://www.w3.org/2000/svg","path"); if(points.length<2) return p; let d=`M ${points[0][0]} ${points[0][1]}`; for(let i=1;i<points.length;i++) d+=` L ${points[i][0]} ${points[i][1]}`; p.setAttribute("d",d); p.setAttribute("fill","none"); p.setAttribute("stroke",color); p.setAttribute("stroke-width","2.5"); return p; }
+
+/* ========== 资金流仪表盘 ========== */
+function drawGauge(svgEl, percentOutflow){
+  // percentOutflow: 0~1，表示净流出占比；用红绿半圆表示
+  svgEl.innerHTML="";
+  const cx=120, cy=120, r=100;
+  const arc = (start,end,color)=>{
+    const sAng=Math.PI*(1+start), eAng=Math.PI*(1+end);
+    const sx=cx+r*Math.cos(sAng), sy=cy+r*Math.sin(sAng);
+    const ex=cx+r*Math.cos(eAng), ey=cy+r*Math.sin(eAng);
+    const large = (eAng-sAng)>Math.PI ? 1:0;
+    const path=`M ${sx} ${sy} A ${r} ${r} 0 ${large} 1 ${ex} ${ey}`;
+    const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+    p.setAttribute("d",path); p.setAttribute("stroke",color); p.setAttribute("stroke-width","18"); p.setAttribute("fill","none");
+    return p;
+  };
+  // 左半绿，右半红；中间根据净流出/入占比裁切
+  const cut = Math.min(1,Math.max(0,percentOutflow));
+  svgEl.appendChild(arc(0,1-cut,"var(--green)"));
+  svgEl.appendChild(arc(1-cut,1,"var(--red)"));
+  // 文本
+  const txt=document.createElementNS("http://www.w3.org/2000/svg","text");
+  txt.setAttribute("x","120"); txt.setAttribute("y","95"); txt.setAttribute("class","glabel");
+  txt.textContent = (percentOutflow>0.5? "Net Outflow":"Net Inflow");
+  const num=document.createElementNS("http://www.w3.org/2000/svg","text");
+  num.setAttribute("x","120"); num.setAttribute("y","115"); num.setAttribute("class","glabel");
+  num.textContent = ( (percentOutflow*100).toFixed(1) + "%" );
+  svgEl.appendChild(txt); svgEl.appendChild(num);
+}
+
+/* ========== 拉取数据并渲染 ========== */
+async function fetchJSON(url){ const r=await fetch(url); if(!r.ok) throw new Error(url); return r.json(); }
+
+async function loadSummary(){
+  const s = await fetchJSON(`${API_BASE}/asset/${id}/summary`);
+  $("#logo").textContent = (s.symbol||"?").slice(0,1);
+  $("#title").textContent = s.name || s.symbol || id.toUpperCase();
+  $("#subtitle").textContent = `/${s.symbol || id.toUpperCase()}`;
+  $("#price").textContent = `$${fmtNum(s.price)}`;
+  $("#pct").textContent = `${s.change24h>=0?'+':''}${(+s.change24h).toFixed(2)}%`;
+  $("#pct").style.background = s.change24h>=0? "rgba(5,150,105,.12)":"rgba(239,68,68,.12)";
+  $("#pct").style.color = s.change24h>=0? "var(--green)":"var(--red)";
+  $("#mcap").textContent = fmtMoney(s.marketCap);
+  $("#vol").textContent = fmtMoney(s.volume24h);
+  $("#high").textContent = `$${fmtNum(s.high24h)}`;
+  $("#low").textContent  = `$${fmtNum(s.low24h)}`;
+  $("#amt").textContent  = fmtNum(s.amount24h);
+}
+async function loadHistory(){
+  if(mode==="depth"){ return loadDepth(); }
+  const ks = { "15m":"15m","1h":"1h","4h":"4h","1d":"1d","1w":"1w","1m":"1m" }[interval];
+  const arr = await fetchJSON(`${API_BASE}/asset/${id}/history?interval=${ks}`);
+  if(mode==="line"){
+    drawLine(arr.map(d=>({ t:+d.t, close:+d.close })));
+  }else{
+    drawCandle(arr.map(d=>({ t:+d.t, open:+d.open, high:+d.high, low:+d.low, close:+d.close })));
+  }
+}
+async function loadDepth(){
+  const ob = await fetchJSON(`${API_BASE}/asset/${id}/orderbook?depth=50`);
+  drawDepth(ob.bids||[], ob.asks||[]);
+  // 占比条
+  const share = ob.share || {buy:.5,sell:.5};
+  const pctBuy = Math.max(0, Math.min(1, +share.buy));
+  $("#depthShare").style.background =
+    `linear-gradient(90deg, rgba(5,150,105,.35) 0 ${pctBuy*100}%, rgba(239,68,68,.35) ${pctBuy*100}% 100%)`;
+  // 表格（买卖合表展示）
+  const body = $("#orderbookTable tbody"); body.innerHTML="";
+  const rows = Math.max((ob.bids||[]).length, (ob.asks||[]).length);
+  for(let i=0;i<rows;i++){
+    const b = ob.bids?.[i] || ["",""]; const a = ob.asks?.[i] || ["",""];
+    const tr=document.createElement("tr");
+    tr.innerHTML = `<td class="buy">${fmtNum(b[0])}</td><td class="muted">${fmtNum((+b[1])||0)}</td>
+                    <td class="sell">${fmtNum(a[0])}</td><td>${fmtNum((+a[1])||0)}</td>`;
+    body.appendChild(tr);
+  }
+}
+async function loadTrades(){
+  const arr = await fetchJSON(`${API_BASE}/asset/${id}/trades?limit=50`);
+  const body=$("#tradesTable tbody"); body.innerHTML="";
+  for(const t of arr){
+    const tr=document.createElement("tr");
+    tr.innerHTML = `<td class="muted">${new Date(+t.t).toLocaleTimeString()}</td>
+                    <td class="${t.side==='buy'?'buy':'sell'}">${t.side}</td>
+                    <td>${fmtNum(t.price)}</td><td class="muted">${fmtNum(t.qty)}</td>`;
+    body.appendChild(tr);
+  }
+}
+async function loadChanges(){
+  const c = await fetchJSON(`${API_BASE}/asset/${id}/changes`);
+  const perf = $("#perf"); perf.innerHTML="";
+  const items = [
+    ["1h", c["1h"]], ["24h", c["24h"]], ["7D", c["7d"]],
+    ["30D", c["30d"]], ["1Y", c["1y"]], ["All", c["all"]]
+  ];
+  for(const [k,v] of items){
+    const el=document.createElement("div"); el.className="item";
+    el.innerHTML = `<div class="muted">${k}</div><div class="v ${v>=0?'green':'red'}">${v>=0?'+':''}${(+v).toFixed(2)}%</div>`;
+    perf.appendChild(el);
+  }
+}
+async function loadSentiment(){
+  const s = await fetchJSON(`${API_BASE}/asset/${id}/sentiment`);
+  const bull = +s.bullish || 0, bear = +s.bearish || 0;
+  $("#bull").textContent = Math.round(bull*100)+"%";
+  $("#bear").textContent = Math.round(bear*100)+"%";
+  $("#bullbar").style.width = (Math.min(1,Math.max(0,bull))*100) + "%";
+}
+let ffRange="1d";
+$("#ffTabs").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  ffRange=b.dataset.r;
+  [...$("#ffTabs").children].forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  loadFundFlow();
+});
+async function loadFundFlow(){
+  const f = await fetchJSON(`${API_BASE}/asset/${id}/fundflow?range=${ffRange}`);
+  $("#ffUnit").textContent = f.unit || "USD";
+  $("#netIn").textContent = fmtMoney(f.netInflow||0);
+  // 仪表（把净流出占比映射到 0~1）
+  const totalAbs = (f.history||[]).reduce((s,x)=>s+Math.abs(+x.value||0),0) || 1;
+  const outAbs   = (f.history||[]).filter(x=>(+x.value)<0).reduce((s,x)=>s+Math.abs(+x.value),0);
+  drawGauge($("#gauge"), outAbs/totalAbs);
+  // 柱状：正绿 负红
+  const bars=$("#bars"); bars.innerHTML="";
+  for(const b of (f.bars||[])){
+    const v = (+b.inflow||0) - (+b.outflow||0);
+    const el=document.createElement("div");
+    const h = Math.min(100, Math.abs(v)/ (Math.max(...f.bars.map(x=>Math.abs((+x.inflow||0)-(+x.outflow||0)))) || 1) * 140 + 8);
+    el.style.height = h+"px"; el.title = new Date(+b.t).toLocaleString();
+    el.className = v>=0 ? "barpos" : "barneg";
+    bars.appendChild(el);
+  }
+}
+
+/* ========== 初始化 ========== */
+(async function init(){
+  // 顶部分享
+  $("#shareBtn").onclick = async () => {
+    try { await navigator.share?.({title:document.title, url:location.href}); } catch {}
+  };
+  // Trade 子视图切换时加载
+  $("#tradeTabs").addEventListener("click", (e)=>{
+    const btn=e.target.closest("button"); if(!btn) return;
+    if(btn.dataset.t==="orderbook"){ loadDepth(); }
+    else { loadTrades(); }
+  });
+
+  // 首屏加载
+  await loadSummary();
+  await loadChanges();
+  await loadSentiment();
+  await loadHistory();
+  await loadDepth();
+  await loadFundFlow();
+
+  // 可选：订阅价格推送（后端如有 WS）
+  // const ws = new WebSocket(`${API_BASE.replace('http','ws')}/asset/${id}/stream`);
+  // ws.onmessage = (e)=>{ const m=JSON.parse(e.data); if(m.type==='price'){ $("#price").textContent='$'+fmtNum(m.price); $("#pct").textContent=(m.pct>=0?'+':'')+(+m.pct).toFixed(2)+'%'; } }
+})();
+</script>
+</body>
+</html>
