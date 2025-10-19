@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-<title></title>
+<title>数字黄金 · 单页</title>
 <style>
   :root{--bg:#ffffff;--fg:#0b0b0c;--muted:#6b7280;--line:#e5e7eb;--card:#ffffff;--soft:#f5f5f7;--green:#059669;--red:#ef4444;color-scheme:light dark}
   @media (prefers-color-scheme:dark){:root{--bg:#0b0b0c;--fg:#fafafa;--muted:#9ca3af;--line:#23262b;--card:#0e0f11;--soft:#121317}}
@@ -19,12 +19,14 @@
   .screen{max-width:680px;margin:0 auto;padding:8px 16px 96px;min-height:calc(100vh - 56px - 56px)}
   .hidden{display:none}
 
+  /* market list */
   .thead{display:grid;grid-template-columns:5fr 4fr 3fr;padding:8px 4px;color:var(--muted)}
   .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;margin:8px 0;cursor:pointer}
   .rowgrid{display:grid;grid-template-columns:5fr 4fr 3fr;gap:8px;align-items:center}
   .coin{display:flex;gap:10px;align-items:center}.logo{width:40px;height:40px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-weight:700}
   .cap{font-size:12px;color:var(--muted)}.right{text-align:right}.percent{font-weight:700}.spark{width:70px;height:32px}
 
+  /* bottom nav */
   .nav{position:fixed;bottom:0;left:0;right:0;border-top:1px solid var(--line);background:color-mix(in oklab, var(--bg) 95%, transparent)}
   .nav .grid{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);text-align:center}
   .nav button{display:block;width:100%;padding:10px 0;color:var(--muted);background:none;border:0}
@@ -44,12 +46,11 @@
         <button class="chip">24H %</button>
       </div>
       <div class="tabs">
-        <div>Favorites</div><div class="active">Coins</div><div>Stablecoin Data</div><div>Exchanges</div>
+        <div></div><div class="active"></div><div></div><div></div>
       </div>
     </div>
   </div>
 
-  <!-- Market -->
   <section id="section-market" class="screen">
     <div class="thead">
       <div># Market Cap</div>
@@ -59,45 +60,56 @@
     <div id="rows"></div>
   </section>
 
-  <!-- 其它 4 个空白 section -->
-  <section id="section-watch"  class="screen hidden"></section>
-  <section id="section-chat"   class="screen hidden"></section>
-  <section id="section-news"   class="screen hidden"></section>
-  <section id="section-videos" class="screen hidden"></section>
+  <section id="section-watch"  class="screen hidden">page2</section>
+  <section id="section-chat"   class="screen hidden">3</section>
+  <section id="section-news"   class="screen hidden">4</section>
+  <section id="section-videos" class="screen hidden">5</section>
 
-  <!-- 底部导航（仅切换 section） -->
   <div class="nav">
     <div class="grid">
       <button class="active" data-section="market" title="Market">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12l3-3 4 4 6-6 3 3" stroke="currentColor" stroke-width="2" fill="none"/></svg>
         <span class="lbl">Market</span>
       </button>
-      <button data-section="watch" title="Watch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 4h12v16l-6-4-6 4V4Z" stroke="currentColor" stroke-width="2"/></svg><span class="lbl">Watch</span></button>
-      <button data-section="chat" title="Chat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v9Z" stroke="currentColor" stroke-width="2"/></svg><span class="lbl">Chat</span></button>
-      <button data-section="news" title="News"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Zm4 4h10M7 12h10M7 15h6" stroke="currentColor" stroke-width="2"/></svg><span class="lbl">News</span></button>
-      <button data-section="videos" title="Videos"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h12v12H4zM16 10l6-4v12l-6-4" stroke="currentColor" stroke-width="2"/></svg><span class="lbl">Videos</span></button>
+      <button data-section="watch" title="Watch">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 4h12v16l-6-4-6 4V4Z" stroke="currentColor" stroke-width="2"/></svg>
+        <span class="lbl">Watch</span>
+      </button>
+      <button data-section="chat" title="Chat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v9Z" stroke="currentColor" stroke-width="2"/></svg>
+        <span class="lbl">Chat</span>
+      </button>
+      <button data-section="news" title="News">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Zm4 4h10M7 12h10M7 15h6" stroke="currentColor" stroke-width="2"/></svg>
+        <span class="lbl">News</span>
+      </button>
+      <button data-section="videos" title="Videos">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h12v12H4zM16 10l6-4v12l-6-4" stroke="currentColor" stroke-width="2"/></svg>
+        <span class="lbl">Videos</span>
+      </button>
     </div>
   </div>
 
 <script>
-/* === 配置：把 API_BASE / WS_URL 改成你的地址 === */
-const API_BASE = "https://your.api.example/v1";     // REST 根路径
-const WS_URL   = "";  // 可选：wss://your.stream/prices  推送 {type:'price', id, price, ts}
-
 const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
-const fmtMoney=n=>n>=1e12?`$${(n/1e12).toFixed(2)}T`:n>=1e9?`$${(n/1e9).toFixed(2)}B`:n>=1e6?`$${(n/1e6).toFixed(2)}M`:n>=1e3?`$${(n/1e3).toFixed(2)}K`:`$${(+n).toFixed(2)}`;
-const fmtPrice=p=>p>=100? (+p).toLocaleString(undefined,{maximumFractionDigits:2}) : (+p).toFixed(4);
-async function j(url){ const r=await fetch(url); if(!r.ok) throw new Error(url); return r.json(); }
+const fmtMoney=n=>n>=1e12?`$${(n/1e12).toFixed(2)}T`:n>=1e9?`$${(n/1e9).toFixed(2)}B`:n>=1e6?`$${(n/1e6).toFixed(2)}M`:n>=1e3?`$${(n/1e3).toFixed(2)}K`:`$${n.toFixed(2)}`;
+const fmtPrice=p=>p>=100?p.toLocaleString(undefined,{maximumFractionDigits:2}):p.toFixed(4);
+const now=()=>Date.now();
 
-let quote="USD"; $("#fiat").onclick=()=>{ quote = quote==="USD"?"CNY":quote==="CNY"?"EUR":"USD"; $("#fiat").textContent=quote; loadAssets(); };
+function genSeries(minutes=60, base=100, drift=0.0003){
+  const pts=[]; const start=now()-minutes*60*1000; let price=base;
+  for(let i=0;i<=minutes;i++){ const r=(Math.random()-0.5)*0.4; price=Math.max(0.0001, price*(1+drift+r/100)); pts.push({t:start+i*60*1000,p:price}); }
+  return pts;
+}
+const SEED = [
+  {id:"paxg",rank:1,symbol:"PAXG",name:"PAX Gold",price:2389.1,marketCap:0.6e9,volume24h:28e6,change24h:0.25,spark:genSeries(60,2380,0.00005)},
+  
+];
 
-let rows=[];
-
-/* === 画 sparkline (SVG) === */
 function drawSpark(svgEl, data){
   const w=70,h=32; svgEl.setAttribute("viewBox","0 0 70 32"); svgEl.innerHTML="";
   if(!data || data.length<2) return;
-  const xs=data.map(d=>+d.t), ys=data.map(d=>+d.p);
+  const xs=data.map(d=>d.t), ys=data.map(d=>d.p);
   const xmin=Math.min(...xs), xmax=Math.max(...xs), ymin=Math.min(...ys), ymax=Math.max(...ys);
   const nx=t=>((t-xmin)/(xmax-xmin||1))*w, ny=p=>h-((p-ymin)/(ymax-ymin||1))*h;
   let d=`M ${nx(xs[0])} ${ny(ys[0])}`; for(let i=1;i<data.length;i++) d+=` L ${nx(xs[i])} ${ny(ys[i])}`;
@@ -106,91 +118,49 @@ function drawSpark(svgEl, data){
   svgEl.appendChild(path);
 }
 
-/* === 渲染列表 === */
-function render(){
-  const root=$("#rows"); root.innerHTML="";
-  const keyword=$("#q").value.trim().toLowerCase();
-  const list = keyword ? rows.filter(a=>(`${a.symbol} ${a.name}`).toLowerCase().includes(keyword)) : rows;
+const rowsRoot = $("#rows");
+function renderList(){
+  rowsRoot.innerHTML="";
+  const keyword = $("#q").value.trim().toLowerCase();
+  const list = keyword ? SEED.filter(a=>(`${a.symbol} ${a.name}`).toLowerCase().includes(keyword)) : SEED;
   list.sort((a,b)=>a.rank-b.rank);
   for(const a of list){
     const card=document.createElement("div"); card.className="card";
     card.innerHTML = `
       <div class="rowgrid">
         <div class="coin">
-          <div class="logo">${(a.symbol||"?").slice(0,1)}</div>
+          <div class="logo">${a.symbol.slice(0,1)}</div>
           <div><div style="font-weight:700">${a.symbol}</div><div class="cap">${fmtMoney(a.marketCap)}</div></div>
         </div>
         <div class="right"><div style="font-weight:700">${fmtPrice(a.price)}</div><div class="cap">${fmtMoney(a.volume24h)}</div></div>
         <div class="right" style="display:flex;justify-content:end;gap:8px;align-items:center">
-          <div class="percent" style="color:${a.change24h>=0?'var(--green)':'var(--red)'}">${a.change24h>=0?'+':''}${(+a.change24h).toFixed(2)}%</div>
+          <div class="percent" style="color:${a.change24h>=0?'var(--green)':'var(--red)'}">${a.change24h>=0?'+':''}${a.change24h.toFixed(2)}%</div>
           <svg class="spark" viewBox="0 0 70 32" preserveAspectRatio="none"></svg>
           <svg width="16" height="16" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none"/></svg>
         </div>
       </div>`;
-    const spark = a.spark && a.spark.length ? a.spark : (a._spark || []);
-    drawSpark(card.querySelector(".spark"), spark);
-    card.onclick = ()=>{ location.href = `asset.html?id=${encodeURIComponent(a.id)}`; };
-    root.appendChild(card);
+    drawSpark(card.querySelector(".spark"), a.spark||[]);
+    card.onclick = ()=>{ window.location.href = `asset.html?id=${encodeURIComponent(a.id)}`; };
+    rowsRoot.appendChild(card);
   }
 }
+renderList();
 
-/* === 拉取资产列表 === */
-async function loadAssets(){
-  const list = await j(`${API_BASE}/assets?quote=${quote}&limit=100`);
-  // 正常期望每个 item: {id,rank,symbol,name,price,marketCap,volume24h,change24h,spark?:[{t,p}...]}
-  rows = list;
-  render();
-  // 补 spark：如果后端未提供 spark，就再拉一遍 15 分钟线（轻量）
-  const need = rows.filter(a=>!a.spark || a.spark.length<2).slice(0,20); // 避免首屏打爆
-  await Promise.all(need.map(async a=>{
-    try{
-      const his = await j(`${API_BASE}/asset/${a.id}/history?interval=15m`);
-      a._spark = his.slice(-70).map(d=>({t:+d.t, p:+(d.close ?? d.p)}));
-    }catch{}
-  }));
-  render();
-}
+$("#q").oninput = ()=>renderList();
 
-/* === 实时（WebSocket 或 轮询） === */
-function startLive(){
-  if(WS_URL){
-    try{
-      const ws = new WebSocket(WS_URL);
-      ws.onmessage = (e)=>{
-        try{
-          const m = JSON.parse(e.data);
-          if(m.type==="price" && m.id){
-            const it = rows.find(x=>x.id===m.id);
-            if(it){ it.price = +m.price; it.change24h = m.pct ?? it.change24h;
-              (it.spark ||= []).push({t:m.ts||Date.now(), p:+m.price});
-              if(it.spark.length>90) it.spark.shift();
-              render();
-            }
-          }
-        }catch{}
-      };
-    }catch{ setInterval(loadAssets, 10000); }
-  }else{
-    setInterval(loadAssets, 10000);
-  }
-}
-
-/* === 事件绑定：搜索 & 底部按钮 === */
-$("#q").oninput = ()=>render();
 const sections = ["market","watch","chat","news","videos"];
 $$(".nav button").forEach(btn=>{
   btn.onclick = ()=>{
     const target = btn.getAttribute("data-section");
     sections.forEach(key=>{
-      const sec = $("#section-"+key);
+      const sec = document.getElementById("section-"+key);
+      if(!sec) return;
       if(key===target) sec.classList.remove("hidden"); else sec.classList.add("hidden");
     });
-    $$(".nav button").forEach(b=>b.classList.remove("active")); btn.classList.add("active");
+    $$(".nav button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
   };
 });
-
-/* === 启动 === */
-loadAssets().then(startLive);
 </script>
 </body>
 </html>
